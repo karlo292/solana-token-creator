@@ -1,0 +1,36 @@
+<%- include("partials/header") %>
+
+<div class="container mx-auto p-4 flex justify-center ">
+  <div class="bg-gray-800 p-8 rounded-lg shadow-lg mt-6 w-[90%] md:w-[500px] ">
+    <h2 class="text-2xl font-bold text-white mb-6">Create Your Solana Token</h2>
+    <form action="/create" method="POST" class="space-y-6">
+      <div>
+        <label for="tokenName" class="block text-sm font-medium text-gray-300">Token Name</label>
+        <input type="text" id="tokenName" name="tokenName" class="mt-1 block w-full px-4 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-gray-700 text-white sm:text-sm" placeholder="Enter token name">
+      </div>
+      <div>
+        <label for="tokenSymbol" class="block text-sm font-medium text-gray-300">Token Symbol</label>
+        <input type="text" id="tokenSymbol" name="tokenSymbol" class="mt-1 block w-full px-4 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-gray-700 text-white sm:text-sm" placeholder="Enter token symbol">
+      </div>
+      <div>
+        <label for="tokenURI" class="block text-sm font-medium text-gray-300">Token URI</label>
+        <input type="text" id="tokenURI" name="tokenURI" class="mt-1 block w-full px-4 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-gray-700 text-white sm:text-sm" placeholder="Enter token URI">
+      </div>
+      <div>
+        <label for="tokenDecimals" class="block text-sm font-medium text-gray-300">Token Decimals</label>
+        <input type="number" id="tokenDecimals" name="tokenDecimals" class="mt-1 block w-full px-4 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-gray-700 text-white sm:text-sm" placeholder="Enter token decimals">
+      </div>
+      <div>
+        <label for="tokenInitialSupply" class="block text-sm font-medium text-gray-300">Initial Supply</label>
+        <input type="number" id="tokenInitialSupply" name="tokenInitialSupply" class="mt-1 block w-full px-4 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-gray-700 text-white sm:text-sm" placeholder="Enter token decimals">
+      </div>
+      <div>
+        <button type="submit" class="w-full inline-flex justify-center py-3 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          Create Token
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include("partials/footer") %>
