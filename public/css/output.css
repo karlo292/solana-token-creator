@@ -588,10 +588,6 @@ video {
   }
 }
 
-.visible {
-  visibility: visible;
-}
-
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -627,10 +623,6 @@ video {
 
 .grid {
   display: grid;
-}
-
-.hidden {
-  display: none;
 }
 
 .w-\[90\%\] {
