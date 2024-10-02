@@ -100,7 +100,7 @@ router.get('/tokens', async (req, res) => {
 })
 
 function findJsonLink(data) {
-    if (typeof data === 'string' && data.endsWith('.json')) {
+    if (typeof data === 'string' && isValidUrl(data)) {
         return data;
     }
     if (typeof data === 'object') {
@@ -114,5 +114,13 @@ function findJsonLink(data) {
     return null;
 }
 
+function isValidUrl(string) {
+    try {
+        new URL(string);
+        return true;
+    } catch (_) {
+        return false;
+    }
+}
 
 module.exports = router;
