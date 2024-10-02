@@ -9,7 +9,16 @@ const {
 
 
 router.get("/create", (req, res) => {
-  res.render("create");
+
+  if (!req.cookies.privateKey || !req.cookies.network) {
+    res.redirect("/auth");
+  }
+
+  
+
+  res.render("create", {
+    network: req.cookies.network,
+  });
 });
 
 const requestAirdrop = async (connection, publicKey, amountSOL) => {
@@ -47,7 +56,7 @@ router.post("/create", async (req, res) => {
     const publicKey = wallet.publicKey;
     console.log(publicKey)
     const balance = await connection.getBalance(publicKey);
-    console.log("Wallet balance:", balance,publicKey);
+    console.log("Wallet balance:", balance, publicKey);
 
     const MINT_SIZE = splToken.MintLayout.span;
     const TOKEN_PROGRAM_ID = splToken.TOKEN_PROGRAM_ID;
@@ -152,16 +161,16 @@ router.post("/create", async (req, res) => {
     res
       .status(200)
     res.render('complete', {
-        solanaNetwork: solanaNetwork,
-        tokenName: tokenName,
-        tokenSymbol: tokenSymbol,
-        tokenURI: tokenURI,
-        tokenDecimals: tokenDecimals,
-        tokenInitialSupply: tokenInitialSupply,
-        mintAddress: mintKeypair.publicKey.toBase58(),
-        fromTokenAccount: tokenATA.address,
-        wallet: publicKey.toBase58(),
-        solscan: `https://solscan.io/account/${mintKeypair.publicKey.toBase58()}`,
+      solanaNetwork: solanaNetwork,
+      tokenName: tokenName,
+      tokenSymbol: tokenSymbol,
+      tokenURI: tokenURI,
+      tokenDecimals: tokenDecimals,
+      tokenInitialSupply: tokenInitialSupply,
+      mintAddress: mintKeypair.publicKey.toBase58(),
+      fromTokenAccount: tokenATA.address,
+      wallet: publicKey.toBase58(),
+      solscan: `https://solscan.io/account/${mintKeypair.publicKey.toBase58()}`,
     })
   } catch (error) {
     console.error("Error creating token:", error);
