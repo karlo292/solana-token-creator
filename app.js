@@ -17,7 +17,7 @@ app.use(require('./routes/index'));
 
 app.use(require('./routes/create'))
 
-
+app.use(require('./routes/guide'));
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

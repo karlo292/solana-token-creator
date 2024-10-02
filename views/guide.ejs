@@ -1,0 +1,44 @@
+<%- include("partials/header") %>
+
+<div class="container mx-auto p-4 flex justify-center">
+  <div class="bg-gray-800 p-8 rounded-lg shadow-lg mt-6 w-full md:w-[800px]">
+    <h2 class="text-3xl font-bold text-white mb-6 text-center">Guide to Creating Your Solana Token</h2>
+    <div class="space-y-6 text-gray-300">
+      <div>
+        <h3 class="text-2xl font-semibold text-blue-400">Token Name</h3>
+        <p class="mt-2">The name of your token. This is a human-readable name that will be displayed in wallets and exchanges. Choose a unique and descriptive name for your token.</p>
+      </div>
+      <div>
+        <h3 class="text-2xl font-semibold text-blue-400">Token Symbol</h3>
+        <p class="mt-2">The symbol of your token. This is a short, uppercase abbreviation that represents your token. For example, "BTC" for Bitcoin or "ETH" for Ethereum. Choose a unique symbol for your token.</p>
+      </div>
+      <div>
+        <h3 class="text-2xl font-semibold text-blue-400">Metadata URI</h3>
+        <p class="mt-2">The URI (Uniform Resource Identifier) that points to the metadata of your token. This should be a link to a JSON file that contains additional information about your token, such as its description, image, and attributes. Ensure the link starts with "http://" or "https://".</p>
+      </div>
+      <div>
+        <h3 class="text-2xl font-semibold text-blue-400">Token Decimals</h3>
+        <p class="mt-2">The number of decimal places your token can be divided into. For example, if you set this to 2, your token can be divided into hundredths. The value should be between 0 and 9.</p>
+      </div>
+      <div>
+        <h3 class="text-2xl font-semibold text-blue-400">Initial Supply</h3>
+        <p class="mt-2">The initial supply of your token. This is the total number of tokens that will be created initially. Choose a number that reflects the total supply you want for your token.</p>
+      </div>
+      <div>
+        <h3 class="text-2xl font-semibold text-blue-400">Solana Network</h3>
+        <p class="mt-2">The Solana network on which you want to create your token. You can choose between "Mainnet" and "Testnet". The Mainnet is the live network where real transactions occur, while the Testnet is used for testing purposes.</p>
+      </div>
+      <div>
+        <h3 class="text-2xl font-semibold text-blue-400">Wallet Private Key</h3>
+        <p class="mt-2">Your Solana wallet's private key. This is a sensitive piece of information that allows you to access and manage your wallet. Ensure you keep this key secure and do not share it with anyone. You can generate a new wallet and private key using Solana wallet tools like Sollet or Phantom.</p>
+      </div>
+    </div>
+    <div class="mt-6 text-center">
+      <a href="/create" class="inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-lg font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform transform hover:scale-105">
+        Create Your Token
+      </a>
+    </div>
+  </div>
+</div>
+
+<%- include("partials/footer") %>
