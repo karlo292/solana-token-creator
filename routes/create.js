@@ -10,7 +10,7 @@ const {
 
 router.get("/create", (req, res) => {
 
-  if (!req.cookies.privateKey || !req.cookies.network) {
+  if (!req.cookies.privateKey && !req.cookies.network) {
     res.redirect("/auth");
   }
 
