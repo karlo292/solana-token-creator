@@ -13,7 +13,7 @@ router.get('/airdrop', async (req, res) => {
     const privateKey = req.cookies.privateKey;
     const network = req.cookies.network;
 
-    if (!privateKey || !network) {
+    if (!privateKey && !network) {
         return res.redirect("/auth");
     }
 
@@ -49,12 +49,8 @@ router.get('/airdrop', async (req, res) => {
                     },
                 };
 
-                // moralis doesn't use mainnet-beta, it uses mainnet
-                if (network === 'mainnet-beta') {
-                    network = 'mainnet';
-                }
-
-                const fetchPromise = fetch(`https://solana-gateway.moralis.io/token/${network}/${mintAddress}/metadata`, options)
+                let adjustedNetwork = network === 'mainnet-beta' ? 'mainnet' : network;
+                const fetchPromise = fetch(`https://solana-gateway.moralis.io/token/${adjustedNetwork}/${mintAddress}/metadata`, options)
                     .then(response => response.json())
                     .then((response) => {
                         if (response.name) {

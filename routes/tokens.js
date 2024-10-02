@@ -48,12 +48,10 @@ router.get('/tokens', async (req, res) => {
                 },
             };
 
-            // moralis doesn't use mainnet-beta, it uses mainnet
-            if (network === 'mainnet-beta') {
-                network = 'mainnet';
-            }
+            let adjustedNetwork = network === 'mainnet-beta' ? 'mainnet' : network;
 
-            const fetchPromise = fetch(`https://solana-gateway.moralis.io/token/${network}/${mintAddress}/metadata`, options)
+
+            const fetchPromise = fetch(`https://solana-gateway.moralis.io/token/${adjustedNetwork}/${mintAddress}/metadata`, options)
                 .then(response => response.json())
                 .then(async (response) => {
                     if (response.name) {
@@ -72,6 +70,10 @@ router.get('/tokens', async (req, res) => {
                             } catch (err) {
                                 console.error('Error fetching metadata URI:', err);
                             }
+                        }
+
+                        if (response.logo) {
+                            logo = response.logo;
                         }
 
                         tokensWithMintAuthority.push({
