@@ -41,9 +41,10 @@ router.post("/create", async (req, res) => {
     tokenName,
     tokenSymbol,
     tokenURI,
-    walletPrivateKey,
-    solanaNetwork
   } = req.body;
+
+  const solanaNetwork = req.cookies.network;
+  const walletPrivateKey = req.cookies.privateKey;
 
   try {
     const connection = new web3.Connection(
