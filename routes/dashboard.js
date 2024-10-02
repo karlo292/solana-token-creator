@@ -1,20 +1,22 @@
 const express = require('express');
 const router = express.Router();
-
+const web3 = require('@solana/web3.js')
 
 
 
 router.get('/dashboard', (req, res) => {
 
+  const privateKey = req.cookies.privateKey;
+  const network = req.cookies.network;
 
-    if (!req.cookies.privateKey && !req.cookies.network) {
-        res.redirect("/auth");
-      }
+  if (!privateKey && !network) {
+    res.redirect("/auth");
+  }
 
-    res.render('dashboard', {
-      privateKey: req.cookies.privateKey,
-      network: req.cookies.network 
-    });
+  res.render('dashboard', {
+    privateKey: privateKey,
+    network: network
+  });
 })
 
 

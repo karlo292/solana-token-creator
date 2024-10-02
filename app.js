@@ -25,6 +25,8 @@ app.use(require('./routes/auth'));
 
 app.use(require('./routes/logout'));
 
+app.use(require('./routes/airdrop'));
+
 app.use(require('./routes/dashboard'));
 
 app.listen(port, () => {

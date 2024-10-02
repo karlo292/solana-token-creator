@@ -1,34 +1,31 @@
 <%- include("partials/header") %>
 
-<div class="container mx-auto p-4">
-    <div class="bg-gray-800 p-8 rounded-lg shadow-lg mt-6 w-full md:w-[800px]">
-        <h2 class="text-3xl font-bold text-white mb-6 text-center">Token Management Dashboard</h2>
-        <div class="space-y-6 text-gray-300">
-            <% if (tokens.length > 0) { %>
-                <table class="min-w-full bg-gray-700 rounded-lg">
-                    <thead>
-                        <tr>
-                            <th class="py-2 px-4 text-left text-gray-300">Token Name</th>
-                            <th class="py-2 px-4 text-left text-gray-300">Token Symbol</th>
-                            <th class="py-2 px-4 text-left text-gray-300">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% tokens.forEach(token => { %>
-                            <tr class="border-b border-gray-600">
-                                <td class="py-2 px-4"><%= token.name %></td>
-                                <td class="py-2 px-4"><%= token.symbol %></td>
-                                <td class="py-2 px-4">
-                                    <a href="/edit/<%= token.id %>" class="text-blue-500 hover:text-blue-700">Edit</a>
-                                </td>
-                            </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
-            <% } else { %>
-                <p class="text-center">No tokens found.</p>
-            <% } %>
+<div class="container mx-auto p-4 justify-center flex">
+    <div class="bg-gray-800 p-8 rounded-lg shadow-lg mt-6 w-full">
+        <h2 class="text-3xl font-bold text-white mb-6 text-center">Your Token Dashboard</h2>
+        
+        <div class="flex space-x-4 mb-6">
+            <a href="/create" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-6 px-4 rounded text-center text-2xl flex-1">
+                Create Token
+            </a>
+            <a href="/airdrop" class="bg-green-500 hover:bg-green-700 text-white font-bold py-6 px-4 rounded text-center text-2xl flex-1">
+                Token Airdrop
+            </a>
         </div>
+        <div class="flex space-x-4 mb-6">
+            <a href="/tokens" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-6 px-4 rounded text-center text-2xl flex-1">
+                Your Tokens
+            </a>
+            <a href="/transactions" class="bg-red-500 hover:bg-red-700 text-white font-bold py-6 px-4 rounded text-center text-2xl flex-1">
+                Past Transactions
+            </a>
+        </div>
+        <div class="flex space-x-4 mb-6">
+            <a href="/guide" class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-6 px-4 rounded text-center text-2xl flex-1">
+                Token Guide
+            </a>
+        </div>
+
     </div>
 </div>
 

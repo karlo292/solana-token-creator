@@ -101,10 +101,9 @@ router.post("/create", async (req, res) => {
       connection,
       wallet,
       mintKeypair.publicKey,
-      publicKey // Owner of the token account
+      publicKey 
     );
 
-    // Mint tokens to the associated token account
     const mintToTransaction = new web3.Transaction().add(
       splToken.createMintToInstruction(
         mintKeypair.publicKey,
@@ -118,7 +117,6 @@ router.post("/create", async (req, res) => {
       wallet,
     ]);
 
-    // Create metadata for the token
     const metadataPDA = await web3.PublicKey.findProgramAddress(
       [
         Buffer.from("metadata"),
