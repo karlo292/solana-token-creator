@@ -13,15 +13,15 @@
         <input type="text" id="tokenSymbol" name="tokenSymbol" class="mt-1 block w-full px-4 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-gray-700 text-white sm:text-sm" placeholder="Enter token symbol">
       </div>
       <div>
-        <label for="tokenURI" class="block text-sm font-medium text-gray-300">Token URI</label>
-        <input type="text" id="tokenURI" name="tokenURI" class="mt-1 block w-full px-4 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-gray-700 text-white sm:text-sm" placeholder="Enter token URI">
+        <label for="tokenURI" class="block text-sm font-medium text-gray-300">Metadata URI <span class="text-gray-500">Link to metadata.json file</span></label>
+        <input type="text" id="tokenURI" name="tokenURI" class="mt-1 block w-full px-4 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-gray-700 text-white sm:text-sm" placeholder="Enter token URI" pattern="https?://.+">
       </div>
       <div>
-        <label for="tokenDecimals" class="block text-sm font-medium text-gray-300">Token Decimals</label>
-        <input type="number" id="tokenDecimals" name="tokenDecimals" class="mt-1 block w-full px-4 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-gray-700 text-white sm:text-sm" placeholder="Enter token decimals">
+        <label for="tokenDecimals" class="block text-sm font-medium text-gray-300">Token Decimals <span class="text-gray-500">(0-9)</span></label>
+        <input type="number" id="tokenDecimals" name="tokenDecimals" class="mt-1 block w-full px-4 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-gray-700 text-white sm:text-sm" placeholder="Enter token decimals" min="0" max="9">
       </div>
       <div>
-        <label for="tokenInitialSupply" class="block text-sm font-medium text-gray-300">Initial Supply</label>
+        <label for="tokenInitialSupply" class="block text-sm font-medium text-gray-300">Initial Supply <span class="text-gray-500">(0-xx)</span></label>
         <input type="number" id="tokenInitialSupply" name="tokenInitialSupply" class="mt-1 block w-full px-4 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-gray-700 text-white sm:text-sm" placeholder="Enter initial supply">
       </div>
       <div>

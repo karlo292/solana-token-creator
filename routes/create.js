@@ -1,170 +1,185 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const bs58 = require('bs58'); // Import bs58 library
-const web3 = require('@solana/web3.js');
-const splToken = require('@solana/spl-token');
-const { createCreateMetadataAccountV3Instruction , PROGRAM_ID } = require('@metaplex-foundation/mpl-token-metadata');
+const bs58 = require("bs58");
+const web3 = require("@solana/web3.js");
+const splToken = require("@solana/spl-token");
+const {
+  createCreateMetadataAccountV3Instruction
+} = require("@metaplex-foundation/mpl-token-metadata");
+const folderDB = require("@karlito1501/folder-db");
+const db = folderDB.init("db");
 
-const folderDB = require('@karlito1501/folder-db');
-const db = folderDB.init('db');
+const configDb = db.createTable("config");
 
-const configDb = db.createTable('config');
+router.get("/create", (req, res) => {
+  const config = configDb.read("config");
+  res.render("create", {
+    wallet_private_key: config.wallet_private_key,
+    solana_network: config.solana_network,
+  });
+});
 
+const requestAirdrop = async (connection, publicKey, amountSOL) => {
+  try {
+    const airdropSignature = await connection.requestAirdrop(publicKey, amountSOL * web3.LAMPORTS_PER_SOL);
+    await connection.confirmTransaction(airdropSignature);
+    const balance = await connection.getBalance(publicKey);
+    console.log(`Airdropped ${amountSOL} SOL. New balance: ${balance}`);
+    return balance;
+  } catch (error) {
+    console.error("Airdrop failed:", error);
+    throw new Error("Airdrop failed.");
+  }
+};
 
-router.get('/create', (req, res) => {
-    const config = configDb.read('config');
+router.post("/create", async (req, res) => {
+  const {
+    tokenDecimals,
+    tokenInitialSupply,
+    tokenName,
+    tokenSymbol,
+    tokenURI,
+  } = req.body;
+  const config = configDb.read("config");
+  const walletPrivateKey = config.wallet_private_key;
+  const solanaNetwork = config.solana_network;
 
-    res.render('create', {
-        wallet_private_key: config.wallet_private_key,
-        solana_network: config.solana_network,
+  try {
+    const connection = new web3.Connection(
+      web3.clusterApiUrl(solanaNetwork),
+      "confirmed"
+    );
+    const wallet = web3.Keypair.fromSecretKey(
+      bs58.default.decode(walletPrivateKey)
+    );
+    const publicKey = wallet.publicKey;
+    console.log(publicKey)
+    const balance = await connection.getBalance(publicKey);
+    console.log("Wallet balance:", balance,publicKey);
 
-    });
-})
+    const MINT_SIZE = splToken.MintLayout.span;
+    const TOKEN_PROGRAM_ID = splToken.TOKEN_PROGRAM_ID;
+    const METADATA_PROGRAM_ID = new web3.PublicKey(
+      "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
+    );
 
+    // Create the mint account and initialize it
+    const mintKeypair = web3.Keypair.generate();
+    const lamports = await connection.getMinimumBalanceForRentExemption(
+      MINT_SIZE
+    );
+    console.log(lamports);
 
-router.post('/create', async (req, res) => {
-    console.log('Starting token creation process...');
-    const { tokenDecimals, tokenInitialSupply, tokenName, tokenSymbol, tokenURI } = req.body;
-
-
-    const config = configDb.read('config');
-    const walletPrivateKey = config.wallet_private_key;
-    const solanaNetwork = config.solana_network;
-
-
-    try {
-        const connection = new web3.Connection(web3.clusterApiUrl(solanaNetwork), 'confirmed');
-        const wallet = web3.Keypair.fromSecretKey(bs58.default.decode(walletPrivateKey));
-        const publicKey = wallet.publicKey;
-
-        const MINT_SIZE = splToken.MintLayout.span;
-        const TOKEN_PROGRAM_ID = new web3.PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
-        const METADATA_PROGRAM_ID = new web3.PublicKey("metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s");
-
-        if (!publicKey) {
-            throw new Error('Failed to derive public key from wallet.');
-        }
-
-
-        const lamports = await splToken.getMinimumBalanceForRentExemptMint(connection);
-        const mintKeypair = web3.Keypair.generate();
-
-        const tokenATA = await splToken.getOrCreateAssociatedTokenAccount(
-            connection,
-            wallet,
-            mintKeypair.publicKey,
-            publicKey
-        );
-        if (!tokenATA) {
-            throw new Error('Failed to create or find associated token account.');
-        }
-        const metadataPDA = await web3.PublicKey.findProgramAddress(
-            [
-                Buffer.from("metadata"),
-                METADATA_PROGRAM_ID.toBuffer(),
-                mintKeypair.publicKey.toBuffer(),
-            ],
-            METADATA_PROGRAM_ID
-        );
-        
-        const createMetadataInstruction = new web3.TransactionInstruction({
-            keys: [
-                { pubkey: metadataPDA[0], isSigner: false, isWritable: true },
-                { pubkey: mintKeypair.publicKey, isSigner: false, isWritable: false },
-                { pubkey: publicKey, isSigner: true, isWritable: false },
-                { pubkey: publicKey, isSigner: true, isWritable: false },
-                { pubkey: web3.SystemProgram.programId, isSigner: false, isWritable: false },
-            ],
-            programId: METADATA_PROGRAM_ID,
-            data: Buffer.from(
-                Uint8Array.of(
-                    0, // Instruction index for create metadata
-                    ...new TextEncoder().encode(tokenName),
-                    ...new TextEncoder().encode(tokenSymbol),
-                    ...new TextEncoder().encode(tokenURI),
-                    0, 0, 0, 0, // Seller fee basis points (0 for no fee)
-                    0 // No creators
-                )
-            ),
-        });
-
-        /*
-        const createMetadataInstruction = createCreateMetadataAccountV3Instruction(
-            {
-                metadata: web3.PublicKey.findProgramAddressSync(
-                    [
-                        Buffer.from("metadata"),
-                        METAPLEX_PROGRAM_ID.toBuffer(),
-                        mintKeypair.publicKey.toBuffer(),
-                    ],
-                    METAPLEX_PROGRAM_ID,
-                )[0],
-                mint: mintKeypair.publicKey,
-                mintAuthority: publicKey,
-                payer: publicKey,
-                updateAuthority: publicKey,
-            },
-            {
-                createMetadataAccountArgsV3: {
-                    data: {
-                        name: tokenName,
-                        symbol: tokenSymbol,
-                        uri: tokenURI,
-                        creators: null,
-                        sellerFeeBasisPoints: 0,
-                        uses: null,
-                        collection: null,
-                    },
-                    isMutable: false,
-                    collectionDetails: null,
-                },
-            },
-        );
-        */
-        
-        const createNewTokenTransaction = new web3.Transaction().add(
-            web3.SystemProgram.createAccount({
-                fromPubkey: publicKey,
-                newAccountPubkey: mintKeypair.publicKey,
-                space: MINT_SIZE,
-                lamports: lamports,
-                programId: TOKEN_PROGRAM_ID,
-            }),
-            splToken.createInitializeMintInstruction(
-              mintKeypair.publicKey, 
-              tokenDecimals, 
-              publicKey, 
-              publicKey, 
-              TOKEN_PROGRAM_ID),
-            splToken.createAssociatedTokenAccountInstruction(
-              publicKey,
-              tokenATA,
-              publicKey,
-              mintKeypair.publicKey,
-            ),
-            splToken.createMintToInstruction(
-              mintKeypair.publicKey,
-              tokenATA.address,
-              publicKey,
-              tokenInitialSupply * Math.pow(10, tokenDecimals),
-            ),
-            createMetadataInstruction
-          );
-          
-          await web3.sendAndConfirmTransaction(connection, createNewTokenTransaction, [wallet, mintKeypair]);
-          console.log('Token created successfully!');
+    const createMintTransaction = new web3.Transaction().add(
+      web3.SystemProgram.createAccount({
+        fromPubkey: publicKey,
+        newAccountPubkey: mintKeypair.publicKey,
+        space: MINT_SIZE,
+        lamports: lamports,
+        programId: TOKEN_PROGRAM_ID,
+      }),
+      splToken.createInitializeMintInstruction(
+        mintKeypair.publicKey,
+        tokenDecimals,
+        publicKey,
+        publicKey
+      )
+    );
 
 
+    await web3.sendAndConfirmTransaction(connection, createMintTransaction, [
+      wallet,
+      mintKeypair,
+    ]);
 
+    // Get the associated token account for the mint
+    const tokenATA = await splToken.getOrCreateAssociatedTokenAccount(
+      connection,
+      wallet,
+      mintKeypair.publicKey,
+      publicKey // Owner of the token account
+    );
 
-    } catch (error) {
-        console.error('Error creating token:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to create token',
-            error: error.message
-        });
-    }
-})
+    // Mint tokens to the associated token account
+    const mintToTransaction = new web3.Transaction().add(
+      splToken.createMintToInstruction(
+        mintKeypair.publicKey,
+        tokenATA.address,
+        publicKey,
+        tokenInitialSupply * Math.pow(10, tokenDecimals)
+      )
+    );
+
+    await web3.sendAndConfirmTransaction(connection, mintToTransaction, [
+      wallet,
+    ]);
+
+    // Create metadata for the token
+    const metadataPDA = await web3.PublicKey.findProgramAddress(
+      [
+        Buffer.from("metadata"),
+        METADATA_PROGRAM_ID.toBuffer(),
+        mintKeypair.publicKey.toBuffer(),
+      ],
+      METADATA_PROGRAM_ID
+    );
+
+    const createMetadataInstruction = createCreateMetadataAccountV3Instruction(
+      {
+        metadata: metadataPDA[0],
+        mint: mintKeypair.publicKey,
+        mintAuthority: publicKey,
+        payer: publicKey,
+        updateAuthority: publicKey,
+      },
+      {
+        createMetadataAccountArgsV3: {
+          data: {
+            name: tokenName,
+            symbol: tokenSymbol,
+            uri: tokenURI,
+            sellerFeeBasisPoints: 0,
+            creators: null,
+            collection: null,
+            uses: null,
+          },
+          isMutable: true,
+          collectionDetails: null,
+        },
+      }
+    );
+
+    const metadataTransaction = new web3.Transaction().add(
+      createMetadataInstruction
+    );
+    await web3.sendAndConfirmTransaction(connection, metadataTransaction, [
+      wallet,
+    ]);
+
+    console.log("Token and metadata created successfully!");
+    res
+      .status(200)
+    res.render('complete', {
+        tokenName: tokenName,
+        tokenSymbol: tokenSymbol,
+        tokenURI: tokenURI,
+        tokenDecimals: tokenDecimals,
+        tokenInitialSupply: tokenInitialSupply,
+        mintAddress: mintKeypair.publicKey.toBase58(),
+        fromTokenAccount: tokenATA.address,
+        wallet: publicKey.toBase58(),
+        solscan: `https://solscan.io/account/${mintKeypair.publicKey.toBase58()}`,
+    })
+  } catch (error) {
+    console.error("Error creating token:", error);
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Failed to create token",
+        error: error.message,
+      });
+  }
+});
 
 module.exports = router;
