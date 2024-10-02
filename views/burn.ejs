@@ -1,0 +1,48 @@
+<%- include("partials/header") %>
+
+<div class="container mx-auto p-4 justify-center flex flex-col">
+
+    <% if (status && amount && mint) { %>
+        <div class="bg-green-500 text-white p-4 rounded mb-4">
+            Tokens successfully burned!
+            <p>Amount: <%= amount %></p>
+            <p>Mint: <%= mint %></p>
+        </div>
+    <% } %>
+
+    <div class="bg-gray-800 p-8 rounded-lg shadow-lg mt-6 w-full md:w-[800px] mx-auto flex justify-center flex-col items-center">
+
+        <h2 class="text-3xl font-bold text-white mb-6 text-center">Burn Your Tokens</h2>
+
+        <form id="burnForm" action="/burn" method="POST" class="space-y-6 w-full">
+            <div>
+                <label for="mintAddress" class="block text-gray-300">Mint Address</label>
+                <select id="mintAddress" name="mintAddress" class="w-full p-2 rounded bg-gray-700 text-white">
+                    <% tokens.forEach(token => { %>
+                        <option value="<%= token.mintAddress %>"><%= token.name %> (<%= token.symbol %>)</option>
+                    <% }) %>
+                </select>
+            </div>
+            <div>
+                <label for="amount" class="block text-gray-300">Amount</label>
+                <input type="number" id="amount" name="amount" class="w-full p-2 rounded bg-gray-700 text-white" required>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                    Burn Tokens
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+  document.getElementById('burnForm').addEventListener('submit', function(event) {
+    const confirmed = confirm('Are you sure you want to burn these tokens?');
+    if (!confirmed) {
+      event.preventDefault();
+    }
+  });
+</script>
+
+<%- include("partials/footer") %>

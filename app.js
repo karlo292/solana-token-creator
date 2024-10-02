@@ -29,6 +29,8 @@ app.use(require('./routes/airdrop'));
 
 app.use(require('./routes/tokens'));
 
+app.use(require('./routes/burn'));
+
 app.use(require('./routes/dashboard'));
 
 app.listen(port, () => {
