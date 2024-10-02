@@ -11,7 +11,10 @@ router.get('/dashboard', (req, res) => {
         res.redirect("/auth");
       }
 
-    res.render('dashboard');
+    res.render('dashboard', {
+      privateKey: req.cookies.privateKey,
+      network: req.cookies.network 
+    });
 })
 
 

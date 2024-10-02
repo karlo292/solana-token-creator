@@ -23,6 +23,8 @@ app.use(require('./routes/guide'));
 
 app.use(require('./routes/auth'));
 
+app.use(require('./routes/logout'));
+
 app.use(require('./routes/dashboard'));
 
 app.listen(port, () => {

@@ -1,10 +1,27 @@
 <div class="mt-4">
     <nav>
-        <div class="container w-[90%] md:min-w-0 mx-auto flex justify-center items-center p-4 bg-gray-800 rounded-lg">
+        <div class="container w-[90%] md:min-w-0 mx-auto flex justify-between items-center p-4 bg-gray-800 rounded-lg">
+            <div class="w-[20%] h-full ml-4 text-left">
+                <% if (privateKey && network) { %>
+                    <% if (network === 'mainnet-beta') { %>
+                        <a class="text-green-500 p-2 font-mono text-lg">mainnet</a>
+                    <% } else { %>
+                        <a class="text-red-500 p-2 font-mono text-lg"><%= network %></a>
+                    <% } %>
+                <% } %>
+                    
+            </div>
             <div>
                 <a href="/" class="text-white p-2 font-mono text-lg">Home</a>
                 <a href="/create" class="text-white p-2 font-mono text-lg">Create</a>
                 <a href="/guide" class="text-white p-2 font-mono text-lg">Guide</a>
+            </div>
+            <div class="w-[20%] h-full mr-4 text-right">
+                <% if (privateKey && network) { %>
+                    <a href="/logout" class="text-white p-2 font-mono text-lg">Logout</a>
+                <% } else { %>
+                    <a href="/auth" class="text-white p-2 font-mono text-lg">Login</a>
+                <% } %>
             </div>
         </div>
     </nav>

@@ -6,7 +6,11 @@ const web3 = require("@solana/web3.js");
 const bs58 = require("bs58");
 
 router.get('/auth', (req, res) => {
-    res.render('auth', {error: null});
+    res.render('auth', { 
+        error: null,
+        privateKey: req.cookies.privateKey,
+        network: req.cookies.network 
+    });
 })
 
 router.post('/auth', (req, res) => {
@@ -23,10 +27,14 @@ router.post('/auth', (req, res) => {
         try {
             wallet = web3.Keypair.fromSecretKey(
                 bs58.default.decode(walletPrivateKey)
-              );
+            );
         } catch (e) {
 
-            res.render('auth', { error: "Invalid private key." });
+            res.render('auth', { 
+                error: "Invalid private key.",
+                privateKey: req.cookies.privateKey,
+                network: req.cookies.network 
+            });
 
         }
 
@@ -39,7 +47,6 @@ router.post('/auth', (req, res) => {
     } catch (error) {
         console.error("Auth error:", error);
         throw new Error("Auth error.");
-        res.render('auth', { error: "Auth error." });
     }
 
 

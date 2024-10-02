@@ -18,6 +18,8 @@ router.get("/create", (req, res) => {
 
   res.render("create", {
     network: req.cookies.network,
+    privateKey: req.cookies.privateKey,
+    network: req.cookies.network 
   });
 });
 
@@ -172,6 +174,8 @@ router.post("/create", async (req, res) => {
       fromTokenAccount: tokenATA.address,
       wallet: publicKey.toBase58(),
       solscan: `https://solscan.io/account/${mintKeypair.publicKey.toBase58()}`,
+      privateKey: req.cookies.privateKey,
+      network: req.cookies.network 
     })
   } catch (error) {
     console.error("Error creating token:", error);
