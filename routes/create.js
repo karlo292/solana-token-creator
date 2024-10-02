@@ -6,17 +6,10 @@ const splToken = require("@solana/spl-token");
 const {
   createCreateMetadataAccountV3Instruction
 } = require("@metaplex-foundation/mpl-token-metadata");
-const folderDB = require("@karlito1501/folder-db");
-const db = folderDB.init("db");
 
-const configDb = db.createTable("config");
 
 router.get("/create", (req, res) => {
-  const config = configDb.read("config");
-  res.render("create", {
-    wallet_private_key: config.wallet_private_key,
-    solana_network: config.solana_network,
-  });
+  res.render("create");
 });
 
 const requestAirdrop = async (connection, publicKey, amountSOL) => {
@@ -39,10 +32,9 @@ router.post("/create", async (req, res) => {
     tokenName,
     tokenSymbol,
     tokenURI,
+    walletPrivateKey,
+    solanaNetwork
   } = req.body;
-  const config = configDb.read("config");
-  const walletPrivateKey = config.wallet_private_key;
-  const solanaNetwork = config.solana_network;
 
   try {
     const connection = new web3.Connection(
@@ -160,6 +152,7 @@ router.post("/create", async (req, res) => {
     res
       .status(200)
     res.render('complete', {
+        solanaNetwork: solanaNetwork,
         tokenName: tokenName,
         tokenSymbol: tokenSymbol,
         tokenURI: tokenURI,
