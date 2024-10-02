@@ -55,16 +55,31 @@ router.get('/tokens', async (req, res) => {
 
             const fetchPromise = fetch(`https://solana-gateway.moralis.io/token/${network}/${mintAddress}/metadata`, options)
                 .then(response => response.json())
-                .then((response) => {
+                .then(async (response) => {
                     if (response.name) {
                         console.log('Getting metadata for mint:', mintAddress);
                         console.log(response);
+
+                        let logo = null;
+
+                        // Searches for the logo in the metadata from .json file
+                        const jsonLink = findJsonLink(response);
+                        if (jsonLink) {
+                            try {
+                                const metadataResponse = await fetch(jsonLink);
+                                const metadata = await metadataResponse.json();
+                                logo = metadata.image || null;
+                            } catch (err) {
+                                console.error('Error fetching metadata URI:', err);
+                            }
+                        }
 
                         tokensWithMintAuthority.push({
                             mintAddress: mintAddress,
                             name: response.name,
                             symbol: response.symbol,
-                            amount: tokenAccount.tokenAmount.uiAmount
+                            amount: tokenAccount.tokenAmount.uiAmount,
+                            logo: logo
                         });
                     }
                 })
@@ -83,6 +98,21 @@ router.get('/tokens', async (req, res) => {
         tokensWithMintAuthority : tokensWithMintAuthority
     });
 })
+
+function findJsonLink(data) {
+    if (typeof data === 'string' && data.endsWith('.json')) {
+        return data;
+    }
+    if (typeof data === 'object') {
+        for (const key in data) {
+            const result = findJsonLink(data[key]);
+            if (result) {
+                return result;
+            }
+        }
+    }
+    return null;
+}
 
 
 module.exports = router;
