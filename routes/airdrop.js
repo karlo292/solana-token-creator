@@ -145,6 +145,7 @@ router.post('/airdrop', async (req, res) => {
         if (error.message.includes('Invalid public key input')) {
             return res.redirect('/airdrop?error=invalid_account');
         }
+        return res.redirect('/airdrop?error=internal_error');
     }
 });
 
