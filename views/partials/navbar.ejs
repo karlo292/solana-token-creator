@@ -4,23 +4,23 @@
             <div class="w-[20%] h-full ml-4 text-left">
                 <% if (privateKey && network) { %>
                     <% if (network === 'mainnet-beta') { %>
-                        <a class="text-green-500 p-2 font-mono text-lg">mainnet</a>
+                        <a class="text-green-500 p-2 font-mono text-md md:text-lg">mainnet</a>
                     <% } else { %>
-                        <a class="text-red-500 p-2 font-mono text-lg"><%= network %></a>
+                        <a class="text-red-500 p-2 font-mono text-md md:text-lg"><%= network %></a>
                     <% } %>
                 <% } %>
                     
             </div>
             <div>
-                <a href="/" class="text-white p-2 font-mono text-lg">Home</a>
-                <a href="/dashboard" class="text-white p-2 font-mono text-lg">Dashboard</a>
-                <a href="/guide" class="text-white p-2 font-mono text-lg">Guide</a>
+                <a href="/" class="text-white p-2 font-mono text-md md:text-lg">Home</a>
+                <a href="/dashboard" class="text-white p-2 font-mono text-md md:text-lg">Dashboard</a>
+                <a href="/guide" class="text-white p-2 font-mono text-md md:text-lg">Guide</a>
             </div>
             <div class="w-[20%] h-full mr-4 text-right">
                 <% if (privateKey && network) { %>
-                    <a href="/logout" class="text-white p-2 font-mono text-lg">Logout</a>
+                    <a href="/logout" class="text-white p-2 font-mono text-md md:text-lg">Logout</a>
                 <% } else { %>
-                    <a href="/auth" class="text-white p-2 font-mono text-lg">Login</a>
+                    <a href="/auth" class="text-white p-2 font-mono text-md md:text-lg">Login</a>
                 <% } %>
             </div>
             
