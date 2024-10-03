@@ -59,7 +59,7 @@ router.post("/create", async (req, res) => {
     const publicKey = wallet.publicKey;
     const balance = await connection.getBalance(publicKey);
 
-    if (balance < 1) {
+    if (balance < 1 && solanaNetwork === "devnet") {
       await requestAirdrop(connection, publicKey, 1);
     }
 
