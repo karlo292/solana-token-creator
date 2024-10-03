@@ -15,6 +15,8 @@ router.get('/burn', async (req, res) => {
         return res.redirect("/auth");
     }
     
+    const errorMessage = req.query.error
+
     let rpc = network == 'mainnet-beta' ? process.env.MAINNET_RPC : process.env.DEVNET_RPC;
 
     if (rpc == '') rpc = web3.clusterApiUrl(network);
@@ -77,6 +79,7 @@ router.get('/burn', async (req, res) => {
         status,
         amount,
         mint,
+        errorMessage
      });
 });
 
@@ -133,9 +136,15 @@ router.post('/burn', async (req, res) => {
             [wallet]
         );
         console.log('Transaction successful:', signature);
-        res.redirect('/burn?status=complete&amount=' + amount + '&mint=' + mintAddress);
+        return res.redirect('/burn?status=complete&amount=' + amount + '&mint=' + mintAddress);
     } catch (error) {
         console.error('Error burning token:', error);
+
+        if (error instanceof web3.SendTransactionError) {
+            console.error('Transaction logs:', error.transactionLogs);
+            return res.redirect('/burn?error=exceeded')
+        }
+    
         res.status(500).send('Internal Server Error');
     }
 });
