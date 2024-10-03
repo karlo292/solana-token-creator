@@ -3,6 +3,8 @@ const router = express.Router();
 const web3 = require('@solana/web3.js');
 const splToken = require('@solana/spl-token');
 const bs58 = require('bs58');
+const dotenv = require('dotenv');
+dotenv.config();
 
 router.get('/burn', async (req, res) => {
 
@@ -12,9 +14,13 @@ router.get('/burn', async (req, res) => {
     if (!privateKey && !network) {
         return res.redirect("/auth");
     }
+    
+    let rpc = network == 'mainnet-beta' ? process.env.MAINNET_RPC : process.env.DEVNET_RPC;
+
+    if (rpc == '') rpc = web3.clusterApiUrl(network);
 
     const connection = new web3.Connection(
-        web3.clusterApiUrl(network),
+        rpc,
         'confirmed'
     );
 
@@ -87,8 +93,12 @@ router.post('/burn', async (req, res) => {
     const decodedPrivateKey = bs58.default.decode(privateKey);
     const wallet = web3.Keypair.fromSecretKey(decodedPrivateKey);
 
+    let rpc = network == 'mainnet-beta' ? process.env.MAINNET_RPC : process.env.DEVNET_RPC;
+
+    if (rpc == '') rpc = web3.clusterApiUrl(network);
+
     const connection = new web3.Connection(
-        web3.clusterApiUrl(network),
+        rpc,
         'confirmed'
     );
 

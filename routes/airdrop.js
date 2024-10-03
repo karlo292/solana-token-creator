@@ -21,11 +21,14 @@ router.get('/airdrop', async (req, res) => {
         const decodedPrivateKey = bs58.default.decode(privateKey);
         const wallet = web3.Keypair.fromSecretKey(decodedPrivateKey);
 
+        let rpc = network == 'mainnet-beta' ? process.env.MAINNET_RPC : process.env.DEVNET_RPC;
+
+        if (rpc == '') rpc = web3.clusterApiUrl(network);
+    
         const connection = new web3.Connection(
-            web3.clusterApiUrl(network),
+            rpc,
             'confirmed'
         );
-        const metaplex = Metaplex.make(connection);
 
         const tokenAccounts = await connection.getParsedTokenAccountsByOwner(wallet.publicKey, {
             programId: splToken.TOKEN_PROGRAM_ID
@@ -54,8 +57,6 @@ router.get('/airdrop', async (req, res) => {
                     .then(response => response.json())
                     .then((response) => {
                         if (response.name) {
-                            console.log('Getting metadata for mint:', mintAddress);
-                            console.log(response);
                             tokensWithMintAuthority.push({
                                 mintAddress: mintAddress,
                                 name: response.name,

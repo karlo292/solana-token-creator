@@ -21,8 +21,12 @@ router.get('/tokens', async (req, res) => {
     const decodedPrivateKey = bs58.default.decode(privateKey);
     const wallet = web3.Keypair.fromSecretKey(decodedPrivateKey);
 
+    let rpc = network == 'mainnet-beta' ? process.env.MAINNET_RPC : process.env.DEVNET_RPC;
+
+    if (rpc == '') rpc = web3.clusterApiUrl(network);
+
     const connection = new web3.Connection(
-        web3.clusterApiUrl(network),
+        rpc,
         'confirmed'
     );
 
