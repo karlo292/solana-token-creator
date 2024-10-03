@@ -14,12 +14,12 @@ router.get("/create", (req, res) => {
     res.redirect("/auth");
   }
 
-  
+
 
   res.render("create", {
     network: req.cookies.network,
     privateKey: req.cookies.privateKey,
-    network: req.cookies.network 
+    network: req.cookies.network
   });
 });
 
@@ -57,9 +57,11 @@ router.post("/create", async (req, res) => {
       bs58.default.decode(walletPrivateKey)
     );
     const publicKey = wallet.publicKey;
-    console.log(publicKey)
     const balance = await connection.getBalance(publicKey);
-    console.log("Wallet balance:", balance, publicKey);
+
+    if (balance < 1) {
+      await requestAirdrop(connection, publicKey, 1);
+    }
 
     const MINT_SIZE = splToken.MintLayout.span;
     const TOKEN_PROGRAM_ID = splToken.TOKEN_PROGRAM_ID;
@@ -72,7 +74,6 @@ router.post("/create", async (req, res) => {
     const lamports = await connection.getMinimumBalanceForRentExemption(
       MINT_SIZE
     );
-    console.log(lamports);
 
     const createMintTransaction = new web3.Transaction().add(
       web3.SystemProgram.createAccount({
@@ -101,7 +102,7 @@ router.post("/create", async (req, res) => {
       connection,
       wallet,
       mintKeypair.publicKey,
-      publicKey 
+      publicKey
     );
 
     const mintToTransaction = new web3.Transaction().add(
@@ -171,9 +172,9 @@ router.post("/create", async (req, res) => {
       mintAddress: mintKeypair.publicKey.toBase58(),
       fromTokenAccount: tokenATA.address,
       wallet: publicKey.toBase58(),
-      solscan: `https://solscan.io/account/${mintKeypair.publicKey.toBase58()}`,
+      explorer: `https://explorer.solana.com/address/${mintKeypair.publicKey.toBase58()}`,
       privateKey: req.cookies.privateKey,
-      network: req.cookies.network 
+      network: req.cookies.network
     })
   } catch (error) {
     console.error("Error creating token:", error);

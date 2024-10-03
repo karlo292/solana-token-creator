@@ -13,6 +13,11 @@ router.get('/airdrop', async (req, res) => {
     const privateKey = req.cookies.privateKey;
     const network = req.cookies.network;
 
+    const query = req.query;
+    const success = query.success;
+    const recipient = query.recipient;
+    const amount = query.amount;
+
     if (!privateKey && !network) {
         return res.redirect("/auth");
     }
@@ -76,7 +81,10 @@ router.get('/airdrop', async (req, res) => {
         res.render('airdrop', {
             tokensWithMintAuthority: tokensWithMintAuthority,
             privateKey: privateKey,
-            network: network
+            network: network,
+            success: success,
+            recipient: recipient,
+            amount: amount
         });
     } catch (error) {
         console.error('Error fetching tokens:', error);
@@ -125,7 +133,7 @@ router.post('/airdrop', async (req, res) => {
             amountToMint
         );
 
-        res.send('Airdrop successful');
+        res.redirect('/airdrop?success=true&recipient=' + recipient + '&amount=' + amount);
     } catch (error) {
         console.error('Error during airdrop:', error);
         res.status(500).send('Internal Server Error');
