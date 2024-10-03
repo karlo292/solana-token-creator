@@ -18,7 +18,7 @@
                 <label for="mintAddress" class="block text-gray-300">Mint Address</label>
                 <select id="mintAddress" name="mintAddress" class="w-full p-2 rounded bg-gray-700 text-white">
                     <% tokensWithMintAuthority.forEach(token => { %>
-                        <option value="<%= token.mintAddress %>"><%= token.name %> (<%= token.symbol %>) - Supply: <%= token.totalSupply %></option>
+                        <option value="<%= token.mintAddress %>"><%= token.name %> (<%= token.symbol %>) - Total supply: <%= token.supply %></option>
                     <% }) %>
                 </select>
             </div>
