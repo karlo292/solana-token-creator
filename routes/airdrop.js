@@ -18,6 +18,8 @@ router.get('/airdrop', async (req, res) => {
     const recipient = query.recipient;
     const amount = query.amount;
 
+    const error = query.error;
+
     if (!privateKey && !network) {
         return res.redirect("/auth");
     }
@@ -87,7 +89,8 @@ router.get('/airdrop', async (req, res) => {
             network: network,
             success: success,
             recipient: recipient,
-            amount: amount
+            amount: amount,
+            error: error
         });
     } catch (error) {
         console.error('Error fetching tokens:', error);
@@ -139,7 +142,9 @@ router.post('/airdrop', async (req, res) => {
         res.redirect('/airdrop?success=true&recipient=' + recipient + '&amount=' + amount);
     } catch (error) {
         console.error('Error during airdrop:', error);
-        res.status(500).send('Internal Server Error');
+        if (error.message.includes('Invalid public key input')) {
+            return res.redirect('/airdrop?error=invalid_account');
+        }
     }
 });
 
