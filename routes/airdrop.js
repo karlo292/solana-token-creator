@@ -57,6 +57,8 @@ router.get('/airdrop', async (req, res) => {
                     },
                 };
 
+                const supply = Number(mintInfo.supply) / Math.pow(10, mintInfo.decimals);
+
                 let adjustedNetwork = network === 'mainnet-beta' ? 'mainnet' : network;
                 const fetchPromise = fetch(`https://solana-gateway.moralis.io/token/${adjustedNetwork}/${mintAddress}/metadata`, options)
                     .then(response => response.json())
@@ -66,7 +68,8 @@ router.get('/airdrop', async (req, res) => {
                                 mintAddress: mintAddress,
                                 name: response.name,
                                 symbol: response.symbol,
-                                amount: tokenAccount.tokenAmount.uiAmount
+                                amount: tokenAccount.tokenAmount.uiAmount,
+                                supply: supply
                             });
                         }
                     })

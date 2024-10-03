@@ -13,12 +13,12 @@
     <div class="bg-gray-800 p-8 rounded-lg shadow-lg mt-6 w-full md:w-[800px]">
         <h2 class="text-3xl font-bold text-white mb-6 text-center">Token Airdrop</h2>
         
-        <form action="/airdrop" method="POST" class="space-y-6">
+        <form id="airdropForm" action="/airdrop" method="POST" class="space-y-6">
             <div>
                 <label for="mintAddress" class="block text-gray-300">Mint Address</label>
                 <select id="mintAddress" name="mintAddress" class="w-full p-2 rounded bg-gray-700 text-white">
                     <% tokensWithMintAuthority.forEach(token => { %>
-                        <option value="<%= token.mintAddress %>"><%= token.name %> (<%= token.symbol %>)</option>
+                        <option value="<%= token.mintAddress %>"><%= token.name %> (<%= token.symbol %>) - Supply: <%= token.totalSupply %></option>
                     <% }) %>
                 </select>
             </div>
@@ -38,5 +38,18 @@
         </form>
     </div>
 </div>
+
+<script>
+    document.getElementById('airdropForm').addEventListener('submit', function(event) {
+        const mintAddress = document.getElementById('mintAddress').selectedOptions[0].text;
+        const recipient = document.getElementById('recipient').value;
+        const amount = document.getElementById('amount').value;
+
+        const confirmation = confirm(`Are you sure you want to airdrop ${amount} tokens to ${recipient} for ${mintAddress}?`);
+        if (!confirmation) {
+            event.preventDefault();
+        }
+    });
+</script>
 
 <%- include("partials/footer") %>
