@@ -48,8 +48,6 @@ router.get('/burn', async (req, res) => {
                 .then(response => response.json())
                 .then((response) => {
                     if (response.name) {
-                        console.log('Getting metadata for mint:', mintAddress);
-                        console.log(response);
                         tokens.push({
                             mintAddress: mintAddress,
                             name: response.name,
@@ -66,7 +64,6 @@ router.get('/burn', async (req, res) => {
 
     await Promise.all(fetchPromises);
     const { status, amount, mint } = req.query;
-    console.log(status)
     res.render('burn', { 
         tokens,
         privateKey,

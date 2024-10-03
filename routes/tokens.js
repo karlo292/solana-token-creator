@@ -55,26 +55,24 @@ router.get('/tokens', async (req, res) => {
                 .then(response => response.json())
                 .then(async (response) => {
                     if (response.name) {
-                        console.log('Getting metadata for mint:', mintAddress);
-                        console.log(response);
-
                         let logo = null;
-
-                        // Searches for the logo in the metadata from .json file
-                        const jsonLink = findJsonLink(response);
-                        if (jsonLink) {
-                            try {
-                                const metadataResponse = await fetch(jsonLink);
-                                const metadata = await metadataResponse.json();
-                                logo = metadata.image || null;
-                            } catch (err) {
-                                console.error('Error fetching metadata URI:', err);
-                            }
-                        }
 
                         if (response.logo) {
                             logo = response.logo;
+                        } else {
+                            // Searches for the logo in the metadata from .json file
+                            const jsonLink = findJsonLink(response);
+                            if (jsonLink) {
+                                try {
+                                    const metadataResponse = await fetch(jsonLink);
+                                    const metadata = await metadataResponse.json();
+                                    logo = metadata.image || null;
+                                } catch (err) {
+                                    console.error('Error fetching metadata URI.');
+                                }
+                            }
                         }
+
 
                         tokensWithMintAuthority.push({
                             mintAddress: mintAddress,
@@ -97,7 +95,7 @@ router.get('/tokens', async (req, res) => {
     res.render('tokens', {
         privateKey: privateKey,
         network: network,
-        tokensWithMintAuthority : tokensWithMintAuthority
+        tokensWithMintAuthority: tokensWithMintAuthority
     });
 })
 
