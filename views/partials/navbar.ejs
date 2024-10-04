@@ -1,6 +1,6 @@
 <div class="mt-4">
     <nav>
-        <div class="container w-[90%] md:min-w-0 mx-auto flex justify-between items-center p-4 bg-gray-800 rounded-lg">
+        <div class="container w-[90%] md:min-w-0 mx-auto flex justify-between items-center p-4 bg-white bg-opacity-10 backdrop-blur-lg rounded-lg shadow-lg border border-white border-opacity-20">
             <div class="w-[20%] h-full ml-4 text-left">
                 <% if (privateKey && network) { %>
                     <% if (network === 'mainnet-beta') { %>
@@ -9,7 +9,6 @@
                         <a class="text-red-500 p-2 font-mono text-md md:text-lg"><%= network %></a>
                     <% } %>
                 <% } %>
-                    
             </div>
             <div>
                 <a href="/" class="text-white p-2 font-mono text-md md:text-lg">Home</a>
@@ -23,7 +22,6 @@
                     <a href="/auth" class="text-white p-2 font-mono text-md md:text-lg">Login</a>
                 <% } %>
             </div>
-            
         </div>
     </nav>
 </div>
