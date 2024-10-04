@@ -10,7 +10,7 @@ router.get('/dashboard', (req, res) => {
   const network = req.cookies.network;
 
   if (!privateKey && !network) {
-    res.redirect("/auth");
+    return res.redirect("/auth");
   }
 
   res.render('dashboard', {
