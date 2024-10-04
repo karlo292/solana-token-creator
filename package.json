@@ -4,8 +4,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently \"nodemon nodemon app.js\" \"tailwindcss -i ./public/css/styles.css -o ./public/css/output.css --watch\"",
-    "start": "concurrently \"node app.js\" \"tailwindcss -i ./public/css/styles.css -o ./public/css/output.css --watch\""
+    "dev": "concurrently \"nodemon app.js\" \"tailwindcss -i ./public/css/styles.css -o ./public/css/output.css --watch\"",
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "",
